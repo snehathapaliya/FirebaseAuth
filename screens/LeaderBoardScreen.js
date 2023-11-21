@@ -1,6 +1,5 @@
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native'
 import React, {useEffect, useState} from 'react';
-import { useRoute } from '@react-navigation/native';
 import { getFirestore, query, getDocs, collection } from 'firebase/firestore';
 
 const LeaderBoardScreen = () => {
@@ -35,7 +34,7 @@ const LeaderBoardScreen = () => {
       </View>
       
     </View>
-  );
+  ); 
 }
 
 

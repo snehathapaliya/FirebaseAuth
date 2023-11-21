@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Alert } from 'react-native'
 import React, {useState, useEffect} from 'react'
 
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-import { getFirestore, collection, query, where, getDocs, doc, addDoc } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, addDoc, updateDoc } from "firebase/firestore";
 
 import { app } from '../firebase';
+
+import auth from '../firebase'
 
 
 const QuizScreen = () => {
@@ -13,6 +15,9 @@ const QuizScreen = () => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [score, setScore] = useState(0);
   const [showResults, setshowResults] = useState(false);
+  const [hideSubmit, setHideSubmit] = useState(true)
+
+  const navigation = useNavigation();
 
   const route = useRoute();
 
@@ -26,6 +31,7 @@ const QuizScreen = () => {
 
     setSelectedOptions({});
     setshowResults(false);
+    setHideSubmit(true);
     
     const db = getFirestore(app);
 
@@ -50,6 +56,15 @@ const QuizScreen = () => {
     });
   };
 
+  const handleSignOut = () => {
+    auth
+      .signOut()
+      .then(() => {
+        navigation.navigate("Login")
+      })
+      .catch(error => alert(error.message))
+  }
+
   const handleSubmit = async () => {
     let correctAnswers = 0;
     questions.forEach((question, index) =>{
@@ -59,12 +74,29 @@ const QuizScreen = () => {
     });
     setScore(correctAnswers);
     setshowResults(true);
+    setHideSubmit(false);
 
     const db = getFirestore();
-    await addDoc(collection(db, "quizzers"), {
-      user: user.split("@")[0], 
-      score: correctAnswers,
-    }); 
+    const userName = user.split("@")[0];
+    const quizRef = collection(db, "quizzers");
+
+    const q = query(quizRef, where("user", '==', userName));
+
+    const snapShot = await getDocs(q);
+
+    if(snapShot.empty){
+      await addDoc(quizRef, {
+        user: userName,
+        score: correctAnswers
+      })
+    } else{
+      snapShot.forEach(async (doc) => {
+        const docRef = doc.ref;
+        await updateDoc(docRef, {
+          score: correctAnswers
+        })
+      })
+    }
 
     console.log(correctAnswers);
   };
@@ -136,14 +168,15 @@ const QuizScreen = () => {
           </View>
          )}
       />
-      <TouchableOpacity        
+
+      {hideSubmit && <TouchableOpacity        
         style ={styles.submitButton}
         onPress={handleSubmit}
         disabled={showResults}
-    >
-
+      >
         <Text style={styles.submitButtonText}>Submit</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>}
+
       { showResults && (
               <View style={styles.result}>
                 <Text 
@@ -159,7 +192,16 @@ const QuizScreen = () => {
                         style={styles.tryAgainButtontext}> Try Again</Text>
                 </TouchableOpacity>
               </View>
-            )}
+        )}
+        <View>
+          <TouchableOpacity 
+          style={styles.submitButton}
+          onPress={handleSignOut}
+          >
+            <Text
+            style={styles.submitButtonText}> Sign out</Text>
+        </TouchableOpacity>
+      </View>
 
     </View>
   )
@@ -236,5 +278,5 @@ const styles = StyleSheet.create({
     tryAgainButtontext:{
       color: '#fff',
       fontSize: 20
-    }
+    },
   });
