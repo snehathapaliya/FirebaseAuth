@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import auth from '../firebase'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-
+import { Image } from 'react-native'
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -44,6 +44,11 @@ const LoginScreen = () => {
       style={styles.container}
       behavior="padding"
     >
+      <View>
+
+        <Text style={styles.heading}>Quiz App</Text>
+
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
@@ -88,6 +93,14 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '80%'
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 40,
   },
   input: {
     backgroundColor: 'white',
