@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react'
 
 import { useRoute } from '@react-navigation/native';
 
-import { getFirestore, collection, query, where, getDocs, getDoc } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, doc, addDoc } from "firebase/firestore";
 
 import { app } from '../firebase';
 
@@ -16,7 +16,7 @@ const QuizScreen = () => {
 
   const route = useRoute();
 
-  const { category } = JSON.parse(route.params);
+  const { category, user } = JSON.parse(route.params);
 
   useEffect(() => {
     getQuestions({})
@@ -50,7 +50,7 @@ const QuizScreen = () => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let correctAnswers = 0;
     questions.forEach((question, index) =>{
       if (selectedOptions[index] === question.correctOption){
@@ -59,6 +59,12 @@ const QuizScreen = () => {
     });
     setScore(correctAnswers);
     setshowResults(true);
+
+    const db = getFirestore();
+    await addDoc(collection(db, "quizzers"), {
+      user: user.split("@")[0], 
+      score: correctAnswers,
+    }); 
 
     console.log(correctAnswers);
   };

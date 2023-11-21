@@ -1,8 +1,10 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
 const LandingScreen = () => {
+  const route = useRoute();
+  const { user } = route.params;
   const navigation = useNavigation()
 
   return (
@@ -11,42 +13,42 @@ const LandingScreen = () => {
 
         <TouchableOpacity
           style = {styles.category}
-          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({category: 'world-affairs'}))}
+          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({user, category: 'world-affairs'}))}
         >
           <Text style ={styles.categoryTitle}>World-Affairs</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style = {styles.category}
-          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({category: 'science'}))}
+          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({user, category: 'science'}))}
         >
           <Text style ={styles.categoryTitle}>Science</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style = {styles.category}
-          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({category: 'technology'}))}
+          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({user, category: 'technology'}))}
         >
           <Text style ={styles.categoryTitle}>Technology</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style = {styles.category}
-          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({category: 'sports'}))}
+          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({user, category: 'sports'}))}
         >
           <Text style ={styles.categoryTitle}>Sports</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style = {styles.category}
-          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({category: 'literature'}))}
+          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({user, category: 'literature'}))}
         >
           <Text style ={styles.categoryTitle}>Literature</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style = {styles.category}
-          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({category: 'movies'}))}
+          onPress={()=> navigation.replace('QuizScreen', JSON.stringify({user, category: 'movies'}))}
         >
           <Text style ={styles.categoryTitle}>Movies</Text>
         </TouchableOpacity>

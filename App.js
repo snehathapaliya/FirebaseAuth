@@ -14,6 +14,8 @@ import CustomNavigationBar from './screens/AppBar';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+
+
   return (
     <PaperProvider>
       <NavigationContainer>
@@ -23,9 +25,12 @@ export default function App() {
           header: (props) => <CustomNavigationBar {...props} />,
         }}>
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Landing" component={LandingScreen} />
+        <Stack.Screen name="Category" component={LandingScreen} />
         <Stack.Screen name="QuizScreen" component={QuizScreen} />
-        <Stack.Screen name="LeaderBoard" component={LeaderBoardScreen} />
+        <Stack.Screen 
+          name="LeaderBoard"
+          component={LeaderBoardScreen}
+        />
       </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
